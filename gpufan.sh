@@ -14,7 +14,7 @@ sleep 30
 #echo "GPU fan controller service started."
 #nvidia-settings -a "[gpu:1]/GPUFanControlState=1"
 #nvidia-settings -a "[gpu:0]/GPUFanControlState=1"
-nvidia-settings -a "GPUFanControlState=1"
+nvidia-settings -a "GPUFanControlState=1" > /dev/null 2>&1
  
 while true
 do
@@ -28,6 +28,6 @@ do
         fan=40
     fi
 
-    nvidia-settings -a "GPUTargetFanSpeed=$fan"
+    nvidia-settings -a "GPUTargetFanSpeed=$fan" > /dev/null 2>&1
     sleep 1
 done
