@@ -12,34 +12,22 @@
 sleep 30
 
 #echo "GPU fan controller service started."
-nvidia-settings -a "[gpu:1]/GPUFanControlState=1"
-nvidia-settings -a "[gpu:0]/GPUFanControlState=1"
+#nvidia-settings -a "[gpu:1]/GPUFanControlState=1"
+#nvidia-settings -a "[gpu:0]/GPUFanControlState=1"
+nvidia-settings -a "GPUFanControlState=1"
  
 while true
 do
-    temp1=`nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader | tail -n 1`
+    temp=`nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits`
 
-    fan1=$((temp1*3))
-    fan1=$((fan1-95))
-    if [[ $fan1 -ge 80 ]]; then
-        fan1=100
-    elif [[ $fan1 -le 40 ]]; then
-        fan1=40
+    fan=$((temp*3))
+    fan=$((fan-95))
+    if [[ $fan -ge 80 ]]; then
+        fan=100
+    elif [[ $fan -le 40 ]]; then
+        fan=40
     fi
 
-    nvidia-settings -a "[fan:0]/GPUTargetFanSpeed=$fan1"
-    nvidia-settings -a "[fan:1]/GPUTargetFanSpeed=$fan1"
-
-    temp2=`nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader | head -n 1`
-
-    fan2=$((temp2*3))
-    fan2=$((fan2-95))
-    if [[ $fan2 -ge 80 ]]; then
-        fan2=100
-    elif [[ $fan2 -le 40 ]]; then
-        fan2=40
-    fi
-
-    nvidia-settings -a "[fan:2]/GPUTargetFanSpeed=$fan2"
+    nvidia-settings -a "GPUTargetFanSpeed=$fan"
     sleep 1
 done
