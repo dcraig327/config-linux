@@ -1,19 +1,6 @@
 #!/bin/bash
-# Put "sleep 30" here if you run it at start-up
-# to make sure this starts after the Nvidia driver does.
-
-#    fanSpeed1=$(($degreesC1 ** 2))
-#    fanSpeed1=$(($fanSpeed1 / 50))
-#    if [[ $fanSpeed1 -gt 100 ]]
-#    then
-#        fanSpeed1=100
-#    fi
-
-sleep 30
-
-#echo "GPU fan controller service started."
-#nvidia-settings -a "[gpu:1]/GPUFanControlState=1"
-#nvidia-settings -a "[gpu:0]/GPUFanControlState=1"
+#sleep 30 was used to make sure this starts after the Nvidia driver
+#but that's no longer needed after placing in .xprofile
 nvidia-settings -a "GPUFanControlState=1" > /dev/null 2>&1
  
 while true
@@ -29,5 +16,5 @@ do
     fi
 
     nvidia-settings -a "GPUTargetFanSpeed=$fan" > /dev/null 2>&1
-    sleep 1
+    sleep 5
 done
