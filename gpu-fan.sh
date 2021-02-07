@@ -3,13 +3,16 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
+readonly BIN_DIR="${HOME}/bin/scripts"
+readonly LOG_FILE="${BIN_DIR}/gpu-fan.log"
+
 #sleep 30 was used to make sure this starts after the Nvidia driver
 #but that's no longer needed after placing in .xprofile
-nvidia-settings -a "GPUFanControlState=1" > /dev/null 2>&1
+nvidia-settings -a "GPUFanControlState=1" > "${LOG_FILE}" 2>&1
  
 while true
 do
-    temp=`nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits > gpufan.log 2>&1`
+    temp=`nvidia-smi --query-gpu=temperature.gpu --format=csv,noheader,nounits > "${LOG_FILE}" 2>&1`
 
     fan=$((temp*3))
     fan=$((fan-95))
@@ -19,6 +22,6 @@ do
         fan=40
     fi
 
-    nvidia-settings -a "GPUTargetFanSpeed=$fan" > /dev/null 2>&1
+    nvidia-settings -a "GPUTargetFanSpeed=$fan" > "${LOG_FILE}" 2>&1
     sleep 5
 done
